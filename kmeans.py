@@ -9,13 +9,18 @@ class KmeansState:
     """Kmeans state class to be able to track the state of the kmeans algorithm after each step"""
     def __init__(self, data, assignments, cluster_centers):
         self.data = data
-        self.assignments = assignments.deepcopy()
-        self.cluster_centers = cluster_centers.deepcopy()
+        self.assignments = assignments.copy()
+        self.cluster_centers = cluster_centers.copy()
 
 def kmeans_initialize(data, k, seed):
     gen = random.Random()
     gen.seed(seed)
-    cluster_centers = random.sample(data, k)
+    
+    cluster_center_indices = random.sample(range(len(data)), k)
+    cluster_centers = []
+    for index in cluster_center_indices:
+        cluster_centers.append(data[index])
+    cluster_centers = np.array(cluster_centers)
     return cluster_centers 
 
 def kmeans_assign_datapoints(data, centers):
@@ -28,16 +33,16 @@ def kmeans_update_cluster_centers(data, assignments, centers):
         new_centers[assignment] += x
         denoms[assignment] += 1
     for i in range(len(centers)):
-        new_centers[assignment] = new_centers[assignment] if denoms[assignment] == 0 else new_centers[assignment]/denoms[assignment]
-    return new_centers
+        new_centers[assignment] = new_centers[assignment] if denoms[assignment][0] == 0 else new_centers[assignment]/denoms[assignment]
+    return np.asarray(new_centers)
 
-def kmeans_iteration(data, k, seed):
-    centers = kmeans_initialize(data, k, seed)
+def kmeans_iteration(data, centers):
     assignments = kmeans_assign_datapoints(data, centers)
     state1 = KmeansState(data, assignments, centers)
-    centers = kmeans_update_cluster_centers(data, assignments, centers)
-    state2 = KmeansState(data, assignments, centers)
-    return [state1, state2]
+    centers2 = kmeans_update_cluster_centers(data, assignments, centers)
+    state2 = KmeansState(data, assignments, centers2)
+    anychange = centers != centers2
+    return (anychange.any(), [state1, state2])
 
 
 
