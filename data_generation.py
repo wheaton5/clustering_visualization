@@ -7,12 +7,18 @@ def generate_simple(k, n, max, standard_deviation, seed):
     rand.seed(seed)
     centers = []
     for _ in range(k):
-        centers.append([rand.random()*max, rand.random()*max])
+        x = rand.random()*max
+        y = rand.random()*max
+        centers.append([x,y])
     centers = np.asarray(centers)
     data = []
+    gen = np.random.default_rng(seed=int(seed))
+    
     for clust in range(k):
         for _ in range(n//k):
-            data.append(np.random.normal(centers[clust], scale=standard_deviation))
+            x = gen.normal(centers[clust], scale=standard_deviation)
+            data.append(x)
+            
     data = np.asarray(data)
     return data
     

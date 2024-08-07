@@ -1,9 +1,19 @@
 import numpy as np
 
 def euclidean_dist(x,y):
-    return np.linalg.norm(x-y)
+    #return np.linalg.norm(x-y)
+    sum = 0
+    for i in range(2):
+        sum += (x[i]-y[i])**2
+    #print(x, y, sum, np.sqrt(sum))
+    return np.sqrt(sum)
 
 def euclidean_dists(x, centers):
+    if x[1] < 0 and x[0] > 25 and x[0] < 30:
+        print("dists")
+        print(x, centers)
+        print([euclidean_dist(x,center) for center in centers])
+        print("assignment", np.argmin([euclidean_dist(x,center) for center in centers]))
     return [euclidean_dist(x,center) for center in centers]
 
 def kmeans_loss(x, centers, assignments):
