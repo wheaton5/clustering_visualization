@@ -22,3 +22,8 @@ def generate_simple(k, n, max, standard_deviation, seed):
     data = np.asarray(data)
     return data
     
+
+def generate_linear(n, max, seed):
+    rand = random.Random()
+    rand.seed(seed)
+    return [int(rand.random()*max) for x in range(n)]
