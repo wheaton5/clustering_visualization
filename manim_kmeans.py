@@ -111,7 +111,7 @@ class PlayKmeans(Scene):
             translated_point = ax.coords_to_point([kmeans_states[0][1].cluster_centers[clust]])
             line = Line(cluster_obj.get_center(), translated_point)
             animations4.append(MoveAlongPath(cluster_obj, line))
-        self.play(animations4, rate_func=linear, run_time=2.5)
+        self.play(animations4, run_time=2.5)
         self.play(Create(text4, run_time=2))
         self.play(Wait(1))
         for kmeans_state_i in range(1,min(4,len(kmeans_states))):
