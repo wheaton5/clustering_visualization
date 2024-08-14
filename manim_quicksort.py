@@ -381,5 +381,11 @@ class PlayQuicksort(Scene):
         text.move_to(text2.get_center())
         text.scale(0.65)
         self.play(create_text(text))
+        text55 = Tex("So let's go back to the beginning")
+        text55.move_to(text3.get_center())
+        self.play(create_text(text55))
+        animations = [FadeOut(x) for x in number_objects]
+        self.play(animations)
+        print(data)
         self.wait(3)
 
