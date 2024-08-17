@@ -155,6 +155,7 @@ class PlayQuicksort(Scene):
         text45.align_to(text4, direction=UP) 
         text5.align_to(text4, direction=UP)
         self.play(FadeOut(text4))
+        text4.set_color(BLACK)
         self.wait()
         #self.play(Create(text45), run_time=8)
         self.play(create_text(text45))
