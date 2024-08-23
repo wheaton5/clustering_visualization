@@ -11,14 +11,11 @@ import math
 class PlayMergesort(Scene):
 
     def construct(self):
-        playsection0 = True
-        playsection1 = True
-        playsection2 = True
-        playsection3 = True
-        playsection4 = True
-        playsection5 = True
-        playsection6 = True
-        playsection7 = True
+        playsections = [False for _ in range(8)]
+        #playsections[4] = True
+        #playsections[5] = True
+        #playsections[6] = True
+        playsections[7] = True
         
         
         def swap(array, i, j):
@@ -82,13 +79,13 @@ class PlayMergesort(Scene):
             text.set_color(get_blue(data[x]/max))    
                      
 
-        self.next_section(skip_animations=not playsection0)
+        self.next_section(skip_animations=not playsections[0])
         text1 = Tex("1. Recursively split data in half until the data are singletons.").shift(DOWN*3.5).scale(text_scale)
         self.play(create_text(text1))
 
 
         # SECTION 1
-        self.next_section(skip_animations=not playsection1)
+        self.next_section(skip_animations=not playsections[0])
 
         square_objects_level2 = []
         animations = []
@@ -109,13 +106,13 @@ class PlayMergesort(Scene):
             animations.append(MoveAlongPath(number_objects[x], line))
 
         xshiftdivider = 2.5
-        self.play(animations, run_time=2)
+        self.play(*animations, run_time=2)
         self.wait()
         
 
 
         # SECTION 2
-        self.next_section(skip_animations=not playsection2)
+        self.next_section(skip_animations=not playsections[1])
 
         square_objects_level3 = []
         animations = [] 
@@ -131,13 +128,13 @@ class PlayMergesort(Scene):
             animations.append(MoveAlongPath(square, line))
             animations.append(MoveAlongPath(number_objects[x], line))
         
-        self.play(animations, run_time=2)
+        self.play(*animations, run_time=2)
         self.wait()
 
 
 
         # SECTION 3
-        self.next_section(skip_animations=not playsection3)
+        self.next_section(skip_animations=not playsections[2])
 
         square_objects_level4 = []
         animations = []
@@ -152,13 +149,13 @@ class PlayMergesort(Scene):
             animations.append(MoveAlongPath(square, line))
             animations.append(MoveAlongPath(number_objects[x], line))
 
-        self.play(animations, run_time=2)
+        self.play(*animations, run_time=2)
         self.wait()
 
     
     
         #SECTION 4
-        self.next_section(skip_animations=not playsection4)    
+        self.next_section(skip_animations=not playsections[3])    
 
         square_objects_level5 = []
         animations = []
@@ -173,12 +170,12 @@ class PlayMergesort(Scene):
             animations.append(MoveAlongPath(square, line))
             animations.append(MoveAlongPath(number_objects[x], line))
 
-        self.play(animations, run_time=2)
+        self.play(*animations, run_time=2)
         self.wait()
 
 
         #SECTION 5
-        self.next_section(skip_animations=not playsection5)
+        self.next_section(skip_animations=not playsections[4])
 
         self.play(FadeOut(text1))
         text2 = Tex("Merge subarrays in a sorted manner. Consider the two subarrays on the left.").move_to(text1.get_center()).scale(text_scale)
@@ -191,7 +188,7 @@ class PlayMergesort(Scene):
 
 
         # SECTION 6
-        self.next_section(skip_animations= not playsection6)
+        self.next_section(skip_animations= not playsections[5])
 
         text3 = Tex(r"{15cm}Put a pointer at the first element of each array. We will denote those by colored squares.", tex_environment="minipage").move_to(text1.get_center()).scale(text_scale)
         self.play(create_text(text3))
@@ -213,19 +210,28 @@ class PlayMergesort(Scene):
         self.play(FadeToColor(square_objects_level5[0], WHITE), FadeIn(compare2))
         line = Line(number_objects[0].get_center(), square_objects_level4[1].get_center())
         self.play(MoveAlongPath(number_objects[0], line), FadeToColor(square_objects_level5[0], WHITE), FadeOut(compare2))
-        self.play(FadeOut(text5))
+        self.play(FadeOut(text5), FadeOut(rectangle))
+        swap(data, 0, 1)
+        swap(number_objects, 0, 1)
 
         #SECTION 7
-        self.next_section(skip_animations=not playsection7)
+        self.next_section(skip_animations=not playsections[6])
         text6 = Tex("And the same for the rest")
         swap(data, 0, 1)
         swap(number_objects, 0, 1)
-        
+        animations0 = []        
         animations1 = [] 
         animations2 = []
+        animations3 = []
+        animations4 = []
+        animations5 = []
+        animations6 = []
+        animations7 = []
         for i in range(1,n//2):
             start = i*2
             next = start + 1
+            rectangle = SurroundingRectangle(VGroup(square_objects_level5[start], square_objects_level5[next]))
+            animations0.extend([FadeIn(rectangle), FadeToColor(square_objects_level5[start], "#FF0000"), FadeToColor(square_objects_level5[next], "#0000FF")])
             mindex = np.argmin(data[start:next+1])+start
             maxdex = np.argmax(data[start:next+1])+start
             loc = (square_objects_level5[start].get_center() + square_objects_level5[next].get_center())/2
@@ -233,9 +239,72 @@ class PlayMergesort(Scene):
             animations1.append(FadeIn(compare))
             line = Line(number_objects[mindex].get_center(), square_objects_level4[start].get_center())
             animations2.append(MoveAlongPath(number_objects[mindex], line))
-        self.play(animations1)
+            animations2.append(FadeOut(compare))
+            animations3.append(FadeToColor(square_objects_level5[mindex], WHITE))
+            compare = Tex(str(data[maxdex]) +" $< \infty$").move_to(loc).scale(text_scale).shift(DOWN*0.65)
+            animations4.append(FadeIn(compare))
+            line = Line(number_objects[maxdex].get_center(), square_objects_level4[start+1].get_center())
+            animations5.append(MoveAlongPath(number_objects[maxdex], line))
+            animations5.append(FadeOut(compare))
+            animations6.append(FadeToColor(square_objects_level5[maxdex], WHITE))
+            animations7.append(FadeOut(rectangle))
+            if maxdex < mindex:
+                swap(data, mindex, maxdex)
+                swap(number_objects, mindex, maxdex)
+        self.play(*animations0)
+        self.wait()        
+        self.play(*animations1)
         self.wait()
-        self.play(animations2)
+        self.play(*animations2)
         self.wait()
-        
+        self.play(*animations3)
+        self.wait()
+        self.play(*animations4)
+        self.wait()
+        self.play(*animations5)
+        self.wait()
+        self.play(*animations6)
+        self.wait()
+        self.play(*animations7)
+        self.wait()
 
+        self.next_section(skip_animations=not playsections[7])
+
+        text = Tex("Now we can better display the merge process. First consider the two subarrays on the left").scale(text_scale).move_to(text1.get_center())
+        rect = SurroundingRectangle(VGroup(square_objects_level4[0], square_objects_level4[3]))
+        self.play(create_text(text))
+        self.play(Create(rect))
+        self.wait()
+        self.play(FadeOut(text))
+        text_pointer = Tex("Initialize our two pointers").scale(text_scale).move_to(text1.get_center())
+        self.play(create_text(text_pointer))
+        pointer1 = 0
+        pointer2 = 2
+        pointer1_square = Square(side_length=side_length, color="#FF0000").move_to(square_objects_level4[pointer1].get_center())
+        pointer2_square = Square(side_length=side_length, color="#0000FF").move_to(square_objects_level4[pointer2].get_center())
+        self.play(FadeIn(pointer1_square), FadeIn(pointer2_square))
+        self.play(FadeOut(text_pointer))
+        text_compare = Tex("Compare the values at the pointer locations, put the minimum into the merged array, and move that pointer forward")
+        destination_index = 0
+        while pointer1 < 2 and pointer2 < 4:
+            number1 = data[pointer1] if pointer1 < 2 else math.inf
+            number2 = data[pointer2] if pointer2 < 4 else math.inf
+            if number1 <= number2:
+                mindex = pointer1
+                maxdex = pointer2
+                maxnumber = number2
+            else:
+                mindex = pointer2
+                maxdex = pointer1
+                maxnumber = number1
+            if maxnumber == math.inf:
+                maxnumber = "\infty"
+            else:
+                maxnumber = str(maxnumber) 
+            
+            self.play(FadeIn(Tex(str(data[mindex]) + " $< "+maxnumber+"$")))
+            line = Line(square_objects_level4[mindex].get_center(), square_objects_level3[destination_index].get_center())
+            self.play(MoveAlongPath(number_objects[mindex], line))
+            
+            break
+            
