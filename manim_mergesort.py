@@ -607,3 +607,4 @@ class PlayMergesort(Scene):
 
         text = Tex("Success!")
         self.play(create_text(text))
+        self.wait(3)
